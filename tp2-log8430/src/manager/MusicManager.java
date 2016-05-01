@@ -47,8 +47,12 @@ public class MusicManager{
 		//contextLastFm.executeSearch(sound);
 		ContextStrategy contextJambase = new ContextStrategy(new JambaseMusic());
 		ArrayList<Music> music2 = contextJambase.executeSearch(sound);
-		music2.addAll(contextLastFm.executeSearch(sound));
-		music.addAll(music2);
+		if(music2 != null){
+			music2.addAll(contextLastFm.executeSearch(sound));
+			if( music != null)
+				music.addAll(music2);
+		}
+		
 		return music;
 	}
 	/*

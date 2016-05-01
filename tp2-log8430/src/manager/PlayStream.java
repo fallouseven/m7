@@ -1,8 +1,12 @@
 package manager;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,9 +14,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,6 +31,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import org.w3c.dom.Document;
@@ -53,11 +63,14 @@ public class PlayStream extends javax.swing.JFrame{
 				MusicManager search = new MusicManager();
 				System.out.println("TEST STREAMING");
 				JFrame frame = new PlayStream();
-				JButton button = new JButton("EXIT");
+				frame.setLayout(new BorderLayout());
+				//some component
+				//JButton button = new JButton("EXIT");
 				//button.addActionListener(this); 
-				JLabel label = new JLabel("un petit texte");
-				JButton button2 = new JButton("PLAY");
-				button2.setToolTipText("Play Music");
+				JLabel label = new JLabel("Put text for search or create playlist");
+				label.setFont(new Font("Serif", Font.PLAIN,12));
+				BufferedImage buttonIcon;
+				JButton button2 = new JButton("PLAY");;
 				JButton buttonSearch = new JButton("SEARCH");
 				buttonSearch.setToolTipText("Search Music");
 				JButton button4 = new JButton("CREATE");
@@ -66,40 +79,88 @@ public class PlayStream extends javax.swing.JFrame{
 				buttonAdd.setToolTipText("Add Music to PLAYLIST");
 				JButton buttonRemove = new JButton("REMOVE");
 				buttonRemove.setToolTipText("Remove Music to PLAYLIST");
-				JTextField textField = new JTextField(10);
+				JTextField textField = new JTextField(20);
+				
+				// set icon button
+				try {
+					String workingDir = System.getProperty("user.dir");
+					String file = workingDir+"/images/play.png";
+					buttonIcon = ImageIO.read(new File(file));
+					ImageIcon imageIcon = new ImageIcon(new ImageIcon(buttonIcon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+					button2 = new JButton(imageIcon);
+					button2.setToolTipText("Play Music");
+					
+					String fileSearch = workingDir+"/images/search.png";
+					buttonIcon = ImageIO.read(new File(fileSearch));
+					ImageIcon imageIconSearch = new ImageIcon(new ImageIcon(buttonIcon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+					buttonSearch = new JButton(imageIconSearch);
+					buttonSearch.setToolTipText("Search Music");
+					
+					String fileAdd = workingDir+"/images/add.png";
+					buttonIcon = ImageIO.read(new File(fileAdd));
+					ImageIcon imageIconAdd = new ImageIcon(new ImageIcon(buttonIcon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+					buttonAdd = new JButton(imageIconAdd);
+					buttonAdd.setToolTipText("Add Music to PLAYLIST");
+					
+					String fileRemove = workingDir+"/images/remove.png";
+					buttonIcon = ImageIO.read(new File(fileRemove));
+					ImageIcon imageIconRemove = new ImageIcon(new ImageIcon(buttonIcon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+					buttonRemove = new JButton(imageIconRemove);
+					buttonRemove.setToolTipText("Remove Music to PLAYLIST");
+					
+					String fileCreate = workingDir+"/images/create.png";
+					buttonIcon = ImageIO.read(new File(fileCreate));
+					ImageIcon imageIconCreate = new ImageIcon(new ImageIcon(buttonIcon).getImage().getScaledInstance(20, 20, Image.SCALE_DEFAULT));
+					button4 = new JButton(imageIconCreate);
+					button4.setToolTipText("Create PLAYLIST");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
 				JPanel pane = new JPanel();
-				//pane.setLayout(new GridLayout(1,2));
 				JPanel pane1 = new JPanel();
 				JPanel pane2 = new JPanel();
 				JPanel pane3 = new JPanel();
 				JPanel pane4 = new JPanel();
 				pane4.setLayout(new GridLayout(1,2));
-				pane.add(button);
-				pane.add(buttonAdd);
+				//pane.add(button);
 				pane.add(buttonRemove);
+				pane.add(buttonAdd);
 				pane.add(button2);
-				pane.add(buttonSearch);
 				pane.add(button4);
+				pane.add(buttonSearch);
 				pane.add(textField);
+				
+				//set size
+				pane4.setPreferredSize(new Dimension(300, 600));
+		        pane4.setMinimumSize(new Dimension(250, 600));
+		        
+		        
+		        pane4.add(pane1);
+				pane4.add(pane3);
+				pane.add(label);
+				
 				frame.getContentPane().add(pane, BorderLayout.NORTH);
 				frame.getContentPane().add(pane4, BorderLayout.WEST);
 				frame.getContentPane().add(pane2, BorderLayout.CENTER);
 				//frame.getContentPane().add(pane3, BorderLayout.EAST);
-				pane4.add(pane1);
-				pane4.add(pane3);
-				pane.add(label);
+				frame.pack();
+		        frame.setLocationRelativeTo(null);
 				
 				frame.show();
 				String[] columnNames = {"Title",
                         "Genre",
-                        "source",
-                        "api",
-                        "numero"
+                        "Source",
+                        "Api",
+                        "Number"
                         };
-				String[] columnNames1 = {"Playlist"
+				String[] columnNames1 = {"Play List"
                         };
-				String[] columnNames2 = {"Playlist selectionnée"
+				String[] columnNames2 = {"Play List Selected"
                 };
+				
 				DefaultTableModel dtm1 = new DefaultTableModel(null, columnNames1);
 				JTable table1 = new JTable(dtm1){
 			        private static final long serialVersionUID = 1L;
@@ -110,7 +171,7 @@ public class PlayStream extends javax.swing.JFrame{
 			    };
 			    table1.setPreferredSize(new Dimension(50,600));
 				table1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
-				pane1.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
+				pane1.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 				pane1.setLayout(new BorderLayout());
 				pane1.add(new JScrollPane(table1.getTableHeader()), BorderLayout.NORTH);
 				pane1.add(new JScrollPane( table1 ), BorderLayout.CENTER);
@@ -123,7 +184,7 @@ public class PlayStream extends javax.swing.JFrame{
 			        };
 			    };
 				table2.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
-				pane3.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
+				pane3.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 				pane3.setLayout(new BorderLayout());
 				pane3.add(new JScrollPane(table2.getTableHeader()), BorderLayout.NORTH);
 				pane3.add(new JScrollPane(table2), BorderLayout.CENTER);
@@ -136,19 +197,21 @@ public class PlayStream extends javax.swing.JFrame{
 			        };
 			    };
 				table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION );
-				search.parseDir("", dtm1);
 				
+				search.parseDir("", dtm1);
+				pane2.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+				pane2.add(new JScrollPane(table));
+				pane2.setLayout(new BorderLayout());
+				pane2.add(new JScrollPane(table.getTableHeader()), BorderLayout.PAGE_START);
+				pane2.add(new JScrollPane( table), BorderLayout.CENTER);
 				buttonSearch.addActionListener(new ActionListener(){
 
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						// TODO Auto-generated method stub
 						
-						pane2.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
-						pane2.add(new JScrollPane(table));
-						pane2.setLayout(new BorderLayout());
-						pane2.add(new JScrollPane(table.getTableHeader()), BorderLayout.PAGE_START);
-						pane2.add(new JScrollPane( table), BorderLayout.CENTER);
+						
+						DefaultTableModel dtm = (DefaultTableModel) table.getModel();
 						dtm.setRowCount(0);
 						
 						ArrayList<Music> musi = search.search(textField.getText());
@@ -162,6 +225,9 @@ public class PlayStream extends javax.swing.JFrame{
 										String.valueOf(sound.getApi()),
 										Integer.valueOf(sound.getIdTrack())});
 								}
+								table.setModel(dtm);
+							  
+							    dtm.fireTableDataChanged();
 						}
 					}
 					
@@ -207,7 +273,9 @@ public class PlayStream extends javax.swing.JFrame{
 						Document doc = search.createPlayList();
 							search.updateFileXml(music,String.valueOf(dtm1.getValueAt(keepValue.getRowSelected1(), 0)), doc);
 						dtm2.addRow(new Object[]{String.valueOf(dtm.getValueAt(keepValue.getRowSelected(), 0).toString())
+								
 						});
+						
 						}
 						if(keepValue.getRowSelected() == -1 && keepValue.getRowSelected1() == -1){
 							JOptionPane.showMessageDialog(null, "Veuillez selectionner une play liste!", "Attention", JOptionPane.INFORMATION_MESSAGE);
@@ -235,6 +303,7 @@ public class PlayStream extends javax.swing.JFrame{
 							if(dialogResult == JOptionPane.YES_OPTION){
 							search.removePlayList(String.valueOf(dtm1.getValueAt(keepValue.getRowSelected1(), 0)),String.valueOf(dtm2.getValueAt(keepValue.getRowSelected2(), 0)));
 							dtm2.removeRow(keepValue.getRowSelected2());
+							
 							}
 						}else if(keepValue.getRowSelected1() != -1){
 							int dialogResult = JOptionPane.showOptionDialog (null, "Voulez vous supprimer la play liste?","Suppression",JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE,
@@ -245,6 +314,7 @@ public class PlayStream extends javax.swing.JFrame{
 							search.removePlayList(String.valueOf(dtm1.getValueAt(keepValue.getRowSelected1(), 0)),"");
 							dtm2.setRowCount(0);
 							dtm1.removeRow(keepValue.getRowSelected1());
+							
 							}
 						}else if(keepValue.getRowSelected1() == -1 && keepValue.getRowSelected2() == -1){
 							JOptionPane.showMessageDialog(null, "Veuillez selectionner une play liste!", "Attention", JOptionPane.INFORMATION_MESSAGE);
@@ -285,11 +355,10 @@ public class PlayStream extends javax.swing.JFrame{
 					      JTable target = (JTable)e.getSource();
 					      keepValue.setRowSelected(target.getSelectedRow());
 					      //int column = target.getSelectedColumn();
+					      
 					    }
 					  }
 					});
-				
-
 			}
 }
 
